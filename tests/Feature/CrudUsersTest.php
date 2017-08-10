@@ -7,16 +7,16 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ExampleTest extends TestCase
+class CrudUsersTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testBasicTest()
+    use DatabaseMigrations;
+
+    /** @test */
+    public function it_can_read_users()
     {
-        $response = $this->get('/');
+        $response = $this->get('/api/users');
+
+        dd($response);
 
         $response->assertStatus(200);
     }

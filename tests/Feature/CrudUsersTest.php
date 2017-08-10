@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -14,10 +15,21 @@ class CrudUsersTest extends TestCase
     /** @test */
     public function it_can_read_users()
     {
+        $userRaw = [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'john@doe.com'
+        ];
+        factory(User::class)->create($userRaw);
+
         $response = $this->get('/api/users');
 
-        dd($response);
-
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    $userRaw
+                ]
+            ]);
     }
 }

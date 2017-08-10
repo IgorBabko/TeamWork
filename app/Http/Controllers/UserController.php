@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return fractal($books, new UserTransformer())->respond(); 
+        return fractal(User::all(), new UserTransformer())->respond(); 
     }
 
     /**

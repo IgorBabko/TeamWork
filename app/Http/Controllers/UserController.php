@@ -83,6 +83,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return fractal($user, $this->transformer)->respond(); 
     }
 }

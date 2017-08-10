@@ -4,9 +4,7 @@ namespace Tests\Feature;
 
 use App\User;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CrudUsersTest extends TestCase
 {
@@ -53,7 +51,6 @@ class CrudUsersTest extends TestCase
     /** @test */
     function it_can_get_a_user_by_id()
     {
-        factory(User::class, 5)->create();
         $user = factory(User::class)->create(['email' => 'john@doe.com']);
 
         $response = $this->json('GET', "/api/users/{$user->id}");
@@ -86,5 +83,16 @@ class CrudUsersTest extends TestCase
             ->assertJson([
                 'data' => $userRaw
             ]);
+    }
+
+    /** @test */
+    function it_can_delete_a_user_by_id()
+    {
+        $user = factory(User::class)->create();
+        $this->assertDatabaseHas('users', $user->toArray());
+
+        $this->json('DELETE', "/api/users/{$user->id}");
+
+        $this->assertDatabaseMissing('users', $user->toArray());
     }
 }

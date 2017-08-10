@@ -30,4 +30,21 @@ class CrudTasksTest extends TestCase
                 ]
             ]);
     }
+
+    /** @test */
+    function it_can_create_a_task()
+    {
+        $newTaskRaw = [
+            'name' => 'Test task',
+            'description' => 'Some dummy description',
+            'completed_flag' => true,
+        ];
+
+        $response = $this->json('POST', '/api/tasks', $newTaskRaw);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('tasks', [
+            'name' => 'Test task'
+        ]); 
+    }
 }

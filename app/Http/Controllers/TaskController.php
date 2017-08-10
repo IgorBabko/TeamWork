@@ -33,7 +33,14 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string',
+            'description' => 'required'
+        ]);
+
+        $task = Task::create($request->only('name', 'description', 'completed_flag'));
+
+        return fractal($task, $this->transformer)->respond(201); 
     }
 
     /**

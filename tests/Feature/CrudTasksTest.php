@@ -84,4 +84,15 @@ class CrudTasksTest extends TestCase
                 'data' => $taskRaw
             ]);
     }
+
+    /** @test */
+    function it_can_delete_a_task_by_id()
+    {
+        $task = factory(Task::class)->create();
+        $this->assertDatabaseHas('tasks', $task->toArray());
+
+        $this->json('DELETE', "/api/tasks/{$task->id}");
+
+        $this->assertDatabaseMissing('tasks', $task->toArray());
+    }
 }

@@ -63,7 +63,14 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string',
+            'description' => 'required'
+        ]);
+
+        $task->update($request->only('name', 'description', 'completed_flag'));
+
+        return fractal($task, $this->transformer)->respond(); 
     }
 
     /**

@@ -13,12 +13,12 @@ class CrudTasksTest extends TestCase
     /** @test */
     public function it_can_read_tasks()
     {
-        $tasksRaw = [
+        $taskRaw = [
             'name' => 'Test task',
             'description' => 'Some dummy description',
             'completed_flag' => true,
         ];
-        factory(Task::class)->create($tasksRaw);
+        factory(Task::class)->create($taskRaw);
 
         $response = $this->get('/api/tasks');
 
@@ -61,6 +61,27 @@ class CrudTasksTest extends TestCase
                 'data' => [
                     'name' => $task->name
                 ]
+            ]);
+    }
+
+    /** @test */
+    function it_can_update_a_task()
+    {
+        $taskRaw = [
+            'name' => 'Test task',
+            'description' => 'Some dummy description',
+            'completed_flag' => true,
+        ];
+        $task = factory(Task::class)->create($taskRaw);
+        $taskRaw['name'] = 'Another task';
+        $taskRaw['description'] = 'Another dummy description';
+
+        $response = $this->json('PUT', "/api/tasks/{$task->id}", $taskRaw);
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => $taskRaw
             ]);
     }
 }

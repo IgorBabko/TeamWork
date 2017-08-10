@@ -5,7 +5,10 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -47,6 +50,18 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ValidationException) {
             return response()->json(['errors' => $exception->validator->errors()], 422);
+        }
+
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->json(['message' => 'Model not found'], 404);
+        }
+
+        if ($exception instanceof NotFoundHttpException) {
+            return response()->json(['message' => 'Endpoint doesn\'t exist'], 400);
+        }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return response()->json(['message' => 'Endpoint doesn\'t exist'], 400);
         }
 
         return parent::render($request, $exception);

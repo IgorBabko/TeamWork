@@ -8,6 +8,13 @@ use App\Transformers\UserTransformer;
 
 class UserController extends Controller
 {
+    protected $transformer;
+
+    public function __construct(UserTransformer $transformer)
+    {
+        $this->transformer = $transformer;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +22,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return fractal(User::all(), new UserTransformer())->respond(); 
+        return fractal(User::all(), $this->transformer)->respond(); 
     }
 
     /**
@@ -36,7 +43,15 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users'
+        ]);
+
+        $user = User::create($request->only('first_name', 'last_name', 'email'));
+
+        return fractal($user, $this->transformer)->respond(201); 
     }
 
     /**

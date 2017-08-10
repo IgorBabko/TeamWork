@@ -32,4 +32,21 @@ class CrudUsersTest extends TestCase
                 ]
             ]);
     }
+
+    /** @test */
+    function it_can_create_a_user()
+    {
+        $newUserRaw = [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'john@doe.com'
+        ];
+
+        $response = $this->json('POST', '/api/users', $newUserRaw);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('users', [
+            'email' => 'john@doe.com'
+        ]); 
+    }
 }

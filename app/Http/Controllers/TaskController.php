@@ -51,7 +51,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return fractal($task, $this->transformer)->respond(); 
     }
 
     /**

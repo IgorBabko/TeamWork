@@ -47,4 +47,20 @@ class CrudTasksTest extends TestCase
             'name' => 'Test task'
         ]); 
     }
+
+    /** @test */
+    function it_can_get_a_task_by_id()
+    {
+        $task = factory(Task::class)->create(['name' => 'Test task']);
+
+        $response = $this->json('GET', "/api/tasks/{$task->id}");
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'name' => $task->name
+                ]
+            ]);
+    }
 }

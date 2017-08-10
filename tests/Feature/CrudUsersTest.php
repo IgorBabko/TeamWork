@@ -49,4 +49,21 @@ class CrudUsersTest extends TestCase
             'email' => 'john@doe.com'
         ]); 
     }
+
+    /** @test */
+    function it_can_get_a_user_by_id()
+    {
+        factory(User::class, 5)->create();
+        $user = factory(User::class)->create(['email' => 'john@doe.com']);
+
+        $response = $this->json('GET', "/api/users/{$user->id}");
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'email' => $user->email
+                ]
+            ]);
+    }
 }

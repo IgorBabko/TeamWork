@@ -62,7 +62,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return fractal($user, $this->transformer)->respond(); 
     }
 
     /**

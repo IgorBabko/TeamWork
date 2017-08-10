@@ -66,4 +66,25 @@ class CrudUsersTest extends TestCase
                 ]
             ]);
     }
+
+    /** @test */
+    function it_can_update_a_user()
+    {
+        $userRaw = [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'email' => 'jane@doe.com'
+        ];
+        $user = factory(User::class)->create($userRaw);
+        $userRaw['first_name'] = 'Jimmy';
+        $userRaw['email'] = 'jimmy@doe.com';
+
+        $response = $this->json('PUT', "/api/users/{$user->id}", $userRaw);
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'data' => $userRaw
+            ]);
+    }
 }

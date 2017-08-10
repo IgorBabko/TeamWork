@@ -26,7 +26,7 @@ class CrudTasksTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'data' => [
-                    $tasksRaw
+                    $taskRaw
                 ]
             ]);
     }

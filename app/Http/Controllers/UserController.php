@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Events\UserCreated;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Transformers\UserTransformer;
 
 class UserController extends Controller
@@ -41,6 +43,8 @@ class UserController extends Controller
 
         $user = User::create($request->only('first_name', 'last_name', 'email'));
 
+        event(new UserCreated($user)); 
+
         return fractal($user, $this->transformer)->respond(201); 
     }
 
@@ -67,7 +71,11 @@ class UserController extends Controller
         $this->validate($request, [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users'
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($user->id)
+            ]
         ]);
 
         $user->update($request->only('first_name', 'last_name', 'email'));
